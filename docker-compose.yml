@@ -49,7 +49,7 @@ services:
   api-manager:
     build: ./dockerfiles/apim
     healthcheck:
-      test: ["CMD", "nc", "-z","localhost", "9446"]
+      test: ["CMD", "nc", "-z","localhost", "9443"]
       interval: 10s
       start_period: 180s
       retries: 20
