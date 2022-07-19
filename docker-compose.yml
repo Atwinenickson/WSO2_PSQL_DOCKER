@@ -60,9 +60,9 @@ services:
     volumes:
       - ./conf/apim:/home/wso2carbon/wso2-config-volume
     ports:
-      - "9446:9443"
-      - "8286:8280"
-      - "8246:8243"
+      - "9443:9443"
+      - "8280:8280"
+      - "8243:8243"
 
 volumes:
   local_pgdata:
