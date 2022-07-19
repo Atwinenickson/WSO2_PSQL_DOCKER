@@ -14,34 +14,35 @@
 
 version: '3.8'
 services:
-  db:
-    image: postgres:latest
-    container_name: local_pgdb
-    restart: unless-stopped
+  postgresdb:
+    image: postgres
+    container_name: postgresdb_container
+    restart: always
     ports:
-      - "54321:5432"
+      - "5432:5432"
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
     volumes:
       - local_pgdata:/var/lib/postgresql/data
       - ./conf/postgresql/scripts:/docker-entrypoint-initdb.d
+
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready", "-U", "admin", "-d", "admin" ]
+      test: [ "CMD-SHELL", "pg_isready -d admin -U admin"]
       interval: 10s
       timeout: 5s
       retries: 5
+    
 
   pgadmin:
-    image: dpage/pgadmin4:latest
+    image: dpage/pgadmin4
     container_name: pgadmin4_container
-    restart: unless-stopped
+    restart: always
     ports:
-      - "5051:80"
+      - "5050:80"
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: admin
-      POSTGRES_DB: db_development
     volumes:
       - pgadmin-data:/var/lib/pgadmin
 
@@ -52,8 +53,9 @@ services:
       interval: 10s
       start_period: 180s
       retries: 20
+    # network_mode: host
     depends_on:
-      db:
+      postgresdb:
         condition: service_healthy
     volumes:
       - ./conf/apim:/home/wso2carbon/wso2-config-volume
